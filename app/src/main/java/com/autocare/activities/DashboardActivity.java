@@ -8,22 +8,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.autocare.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
-    Button btnLogin;
+    Button btnVehiculos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_dashboard);
 
-        btnLogin = findViewById(R.id.btnLogin);
+        btnVehiculos = findViewById(R.id.btnVehiculos);
 
-        btnLogin.setOnClickListener(v -> {
+        btnVehiculos.setOnClickListener(v -> {
 
             Intent intent = new Intent(
-                    LoginActivity.this,
-                    DashboardActivity.class
+                    DashboardActivity.this,
+                    VehiculoActivity.class
             );
 
             startActivity(intent);

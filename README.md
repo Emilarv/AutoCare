@@ -1,5 +1,9 @@
 # AutoCare
 
+<p align="center">
+  <img src="app/src/main/res/drawable/logo_autocare.png" alt="Logo AutoCare" width="200"/>
+</p>
+
 ## Descripción
 
 AutoCare es una aplicación móvil desarrollada para ayudar a los propietarios de vehículos a gestionar y controlar el mantenimiento de sus automóviles. La aplicación permite registrar vehículos, almacenar historiales de mantenimiento y llevar un control de gastos relacionados con el cuidado vehicular.
@@ -26,6 +30,15 @@ Patrón MVC (Modelo - Vista - Controlador)
 com.autocare
 │
 ├── activities
+│   ├── DashboardActivity.java
+│   ├── DetalleVehiculoActivity.java
+│   ├── GastosActivity.java
+│   ├── LoginActivity.java
+│   ├── MantenimientoActivity.java
+│   ├── RegisterActivity.java
+│   ├── RegistrarMantenimientoActivity.java
+│   └── VehiculoActivity.java
+│
 ├── models
 ├── database
 ├── adapters
@@ -35,12 +48,17 @@ com.autocare
 
 ## Funcionalidades principales
 
-- Registro de usuarios
-- Gestión de vehículos
-- Registro de mantenimientos
-- Historial de servicios
-- Control de gastos
-- Consulta de información vehicular
+- Autenticación: Pantalla de Login para acceso de usuarios.
+
+- Panel de Control (Dashboard): Resumen general de flota, gastos y recordatorios mecánicos.
+
+- Gestión de Vehículos: Listado interactivo de vehículos registrados y acceso a detalles individuales.
+
+- Formulario de Registro: Captura de datos técnicos de nuevos automóviles (Marca, Modelo, Año, Placa).
+
+- Registro de Mantenimientos: Control de servicios preventivos y correctivos.
+
+- Control de Gastos: Historial económico aplicado al cuidado vehicular.
 
 ## Desarrollador
 
@@ -52,4 +70,4 @@ Seminario de Proyecto II (ISW-411)
 
 ## Estado del proyecto
 
-Fase de planificación y preparación para desarrollo.
+Prototipo funcional implementado (Fase de desarrollo de interfaces, navegación y lógica base de actividades).
