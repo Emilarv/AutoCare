@@ -1,53 +1,77 @@
 package com.autocare.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.autocare.R;
 import com.autocare.database.DatabaseHelper;
-
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class RegisterActivity extends AppCompatActivity {
+public class EditarVehiculoActivity extends AppCompatActivity {
 
     TextInputEditText txtMarca;
     TextInputEditText txtModelo;
     TextInputEditText txtAnio;
     TextInputEditText txtPlaca;
 
-    Button btnGuardarVehiculo;
+    MaterialButton btnActualizar;
+
     DatabaseHelper databaseHelper;
+
+    int idVehiculo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        databaseHelper = new DatabaseHelper(this);
+        setContentView(R.layout.activity_editar_vehiculo);
 
         txtMarca = findViewById(R.id.txtMarca);
         txtModelo = findViewById(R.id.txtModelo);
         txtAnio = findViewById(R.id.txtAnio);
         txtPlaca = findViewById(R.id.txtPlaca);
 
-        btnGuardarVehiculo = findViewById(R.id.btnGuardarVehiculo);
+        btnActualizar = findViewById(R.id.btnActualizar);
 
-        btnGuardarVehiculo.setOnClickListener(v -> {
+        databaseHelper = new DatabaseHelper(this);
+
+        // Datos recibidos desde VehiculoActivity
+        idVehiculo = getIntent().getIntExtra("id", 0);
+
+        txtMarca.setText(
+                getIntent().getStringExtra("marca")
+        );
+
+        txtModelo.setText(
+                getIntent().getStringExtra("modelo")
+        );
+
+        txtAnio.setText(
+                String.valueOf(
+                        getIntent().getIntExtra("anio", 0)
+                )
+        );
+
+        txtPlaca.setText(
+                getIntent().getStringExtra("placa")
+        );
+
+        btnActualizar.setOnClickListener(v -> {
 
             String marca = txtMarca.getText().toString().trim();
             String modelo = txtModelo.getText().toString().trim();
             String anioTexto = txtAnio.getText().toString().trim();
             String placa = txtPlaca.getText().toString().trim();
 
-            if (marca.isEmpty() ||
-                    modelo.isEmpty() ||
-                    anioTexto.isEmpty() ||
-                    placa.isEmpty()) {
+            if (marca.isEmpty()
+                    || modelo.isEmpty()
+                    || anioTexto.isEmpty()
+                    || placa.isEmpty()) {
 
                 Toast.makeText(
-                        RegisterActivity.this,
+                        this,
                         "Complete todos los campos",
                         Toast.LENGTH_SHORT
                 ).show();
@@ -57,47 +81,36 @@ public class RegisterActivity extends AppCompatActivity {
 
             int anio = Integer.parseInt(anioTexto);
 
-            boolean insertado =
-                    databaseHelper.insertarVehiculo(
+            boolean actualizado =
+                    databaseHelper.actualizarVehiculo(
+                            idVehiculo,
                             marca,
                             modelo,
                             anio,
                             placa
                     );
 
-            if (insertado) {
+            if (actualizado) {
 
                 Toast.makeText(
-                        RegisterActivity.this,
-                        "Vehículo guardado correctamente",
+                        this,
+                        "Vehículo actualizado correctamente",
                         Toast.LENGTH_SHORT
                 ).show();
-
-                Intent intent = new Intent(
-                        RegisterActivity.this,
-                        DashboardActivity.class
-                );
-
-                intent.addFlags(
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                Intent.FLAG_ACTIVITY_SINGLE_TOP
-                );
-
-                startActivity(intent);
 
                 finish();
 
             } else {
 
                 Toast.makeText(
-                        RegisterActivity.this,
-                        "Error al guardar",
+                        this,
+                        "No se pudo actualizar el vehículo",
                         Toast.LENGTH_SHORT
                 ).show();
+
             }
 
         });
 
     }
-
 }

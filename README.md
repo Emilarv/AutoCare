@@ -27,11 +27,13 @@ Patrón MVC (Modelo - Vista - Controlador)
 ## Estructura del proyecto
 
 ```text
+```text
 com.autocare
 │
 ├── activities
 │   ├── DashboardActivity.java
 │   ├── DetalleVehiculoActivity.java
+│   ├── EditarVehiculoActivity.java
 │   ├── GastosActivity.java
 │   ├── LoginActivity.java
 │   ├── MantenimientoActivity.java
@@ -39,10 +41,20 @@ com.autocare
 │   ├── RegistrarMantenimientoActivity.java
 │   └── VehiculoActivity.java
 │
-├── models
-├── database
 ├── adapters
+│   └── VehiculoAdapter.java
+│
+├── database
+│   └── DatabaseHelper.java
+│
+├── models
+│   ├── Usuario.java
+│   ├── Vehiculo.java
+│   ├── Mantenimiento.java
+│   └── Gasto.java
+│
 ├── utils
+│
 └── MainActivity.java
 ```
 

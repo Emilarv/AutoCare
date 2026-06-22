@@ -1,23 +1,31 @@
 package com.autocare.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.autocare.R;
+import com.autocare.adapters.VehiculoAdapter;
+import com.autocare.database.DatabaseHelper;
+import com.autocare.models.Vehiculo;
 
-import com.google.android.material.card.MaterialCardView;
+import java.util.ArrayList;
 
 public class VehiculoActivity extends AppCompatActivity {
 
     Button btnAgregarVehiculo;
-
-    MaterialCardView cardToyota;
-    MaterialCardView cardHonda;
-    MaterialCardView cardHyundai;
+    TextView txtCantidadVehiculos;
+    RecyclerView recyclerVehiculos;
+    DatabaseHelper databaseHelper;
+    ArrayList<Vehiculo> listaVehiculos;
+    VehiculoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,30 +33,62 @@ public class VehiculoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vehiculo);
 
         btnAgregarVehiculo = findViewById(R.id.btnAgregarVehiculo);
+        txtCantidadVehiculos = findViewById(R.id.txtCantidadVehiculos);
+        recyclerVehiculos = findViewById(R.id.recyclerVehiculos);
 
-        cardToyota = findViewById(R.id.cardToyota);
-        cardHonda = findViewById(R.id.cardHonda);
-        cardHyundai = findViewById(R.id.cardHyundai);
+        recyclerVehiculos.setLayoutManager(new LinearLayoutManager(this));
+
+        databaseHelper = new DatabaseHelper(this);
+
+        cargarVehiculos();
 
         btnAgregarVehiculo.setOnClickListener(v -> {
-            Intent intent = new Intent(
-                    VehiculoActivity.this,
-                    RegisterActivity.class
-            );
+            Intent intent = new Intent(VehiculoActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
-
-        cardToyota.setOnClickListener(v -> abrirDetalle("Toyota Corolla 2020"));
-        cardHonda.setOnClickListener(v -> abrirDetalle("Honda Civic 2021"));
-        cardHyundai.setOnClickListener(v -> abrirDetalle("Hyundai Elantra 2022"));
     }
 
-    private void abrirDetalle(String vehiculo) {
-        Intent intent = new Intent(
-                VehiculoActivity.this,
-                DetalleVehiculoActivity.class
-        );
-        intent.putExtra("vehiculo", vehiculo);
-        startActivity(intent);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarVehiculos();
+    }
+
+    private void cargarVehiculos() {
+        listaVehiculos = databaseHelper.obtenerVehiculos();
+
+        txtCantidadVehiculos.setText("Vehículos registrados: " + listaVehiculos.size());
+
+        // Se inicializa el adaptador pasando la lista y la interfaz implementada correctamente
+        adapter = new VehiculoAdapter(listaVehiculos, new VehiculoAdapter.OnVehiculoClickListener() {
+            @Override
+            public void onEditarClick(Vehiculo vehiculo) {
+                Intent intent = new Intent(VehiculoActivity.this, EditarVehiculoActivity.class);
+                intent.putExtra("id", vehiculo.getId());
+                intent.putExtra("marca", vehiculo.getMarca());
+                intent.putExtra("modelo", vehiculo.getModelo());
+                intent.putExtra("anio", vehiculo.getAnio());
+                intent.putExtra("placa", vehiculo.getPlaca());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onEliminarClick(Vehiculo vehiculo) {
+                new AlertDialog.Builder(VehiculoActivity.this)
+                        .setTitle("Eliminar vehículo")
+                        .setMessage("¿Deseas eliminar " + vehiculo.getMarca() + " " + vehiculo.getModelo() + "?")
+                        .setPositiveButton("Sí", (dialog, which) -> {
+                            boolean eliminado = databaseHelper.eliminarVehiculo(vehiculo.getId());
+                            if (eliminado) {
+                                Toast.makeText(VehiculoActivity.this, "Vehículo eliminado", Toast.LENGTH_SHORT).show();
+                                cargarVehiculos(); // Recarga la lista de inmediato
+                            }
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .show();
+            }
+        });
+
+        recyclerVehiculos.setAdapter(adapter);
     }
 }

@@ -1,8 +1,14 @@
 package com.autocare.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.autocare.models.Vehiculo;
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -11,6 +17,132 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public boolean insertarVehiculo(
+            String marca,
+            String modelo,
+            int anio,
+            String placa) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("id_usuario", 1);
+        values.put("marca", marca);
+        values.put("modelo", modelo);
+        values.put("anio", anio);
+        values.put("placa", placa);
+
+        long resultado = db.insert(
+                "Vehiculo",
+                null,
+                values
+        );
+
+        return resultado != -1;
+    }
+
+    // OBTENER TODOS LOS VEHICULOS
+    public ArrayList<Vehiculo> obtenerVehiculos() {
+
+        ArrayList<Vehiculo> lista = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM Vehiculo",
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                Vehiculo vehiculo = new Vehiculo();
+
+                vehiculo.setId(cursor.getInt(0));
+                vehiculo.setMarca(cursor.getString(2));
+                vehiculo.setModelo(cursor.getString(3));
+                vehiculo.setAnio(cursor.getInt(4));
+                vehiculo.setPlaca(cursor.getString(5));
+
+                lista.add(vehiculo);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return lista;
+    }
+
+    public Vehiculo obtenerVehiculoPorId(int id) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM Vehiculo WHERE id_vehiculo=?",
+                new String[]{String.valueOf(id)}
+        );
+
+        Vehiculo vehiculo = null;
+
+        if (cursor.moveToFirst()) {
+
+            vehiculo = new Vehiculo();
+
+            vehiculo.setId(cursor.getInt(0));
+            vehiculo.setMarca(cursor.getString(2));
+            vehiculo.setModelo(cursor.getString(3));
+            vehiculo.setAnio(cursor.getInt(4));
+            vehiculo.setPlaca(cursor.getString(5));
+        }
+
+        cursor.close();
+
+        return vehiculo;
+    }
+
+    public boolean actualizarVehiculo(
+            int id,
+            String marca,
+            String modelo,
+            int anio,
+            String placa) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("marca", marca);
+        values.put("modelo", modelo);
+        values.put("anio", anio);
+        values.put("placa", placa);
+
+        int filas = db.update(
+                "Vehiculo",
+                values,
+                "id_vehiculo=?",
+                new String[]{String.valueOf(id)}
+        );
+
+        return filas > 0;
+    }
+
+    public boolean eliminarVehiculo(int id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int filas = db.delete(
+                "Vehiculo",
+                "id_vehiculo=?",
+                new String[]{String.valueOf(id)}
+        );
+
+        return filas > 0;
     }
 
     @Override
@@ -76,7 +208,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db,
+                          int oldVersion,
+                          int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS Gasto");
         db.execSQL("DROP TABLE IF EXISTS Mantenimiento");
