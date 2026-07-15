@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.autocare.models.Gasto;
+import com.autocare.models.Usuario;
 
 import com.autocare.models.Vehiculo;
 
@@ -711,6 +712,117 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return cantidad;
+    }
+    public boolean existeCorreo(String correo) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT id_usuario FROM Usuario WHERE correo=?",
+
+                new String[]{correo}
+
+        );
+
+        boolean existe = cursor.moveToFirst();
+
+        cursor.close();
+
+        return existe;
+
+    }
+
+    public boolean registrarUsuario(
+            String nombre,
+            String correo,
+            String contrasena,
+            String fechaRegistro,
+            String estado) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("nombre", nombre);
+        values.put("correo", correo);
+        values.put("contrasena", contrasena);
+        values.put("fecha_registro", fechaRegistro);
+        values.put("estado", estado);
+
+        long resultado = db.insert(
+                "Usuario",
+                null,
+                values
+        );
+
+        return resultado != -1;
+
+    }
+    public Usuario iniciarSesion(
+            String correo,
+            String contrasena) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT * FROM Usuario " +
+                        "WHERE correo=? " +
+                        "AND contrasena=? " +
+                        "AND estado='Activo'",
+
+                new String[]{
+                        correo,
+                        contrasena
+                }
+
+        );
+
+        Usuario usuario = null;
+
+        if (cursor.moveToFirst()) {
+
+            usuario = new Usuario();
+
+            usuario.setIdUsuario(cursor.getInt(0));
+            usuario.setNombre(cursor.getString(1));
+            usuario.setCorreo(cursor.getString(2));
+            usuario.setContrasena(cursor.getString(3));
+            usuario.setFechaRegistro(cursor.getString(4));
+            usuario.setEstado(cursor.getString(5));
+
+        }
+
+        cursor.close();
+
+        return usuario;
+
+    }
+    public boolean existeAlgunUsuario() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT COUNT(*) FROM Usuario",
+
+                null
+
+        );
+
+        boolean existe = false;
+
+        if(cursor.moveToFirst()){
+
+            existe = cursor.getInt(0) > 0;
+
+        }
+
+        cursor.close();
+
+        return existe;
+
     }
 }
 

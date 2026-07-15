@@ -2,12 +2,18 @@ package com.autocare.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageButton;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,28 +21,39 @@ import com.autocare.R;
 import com.autocare.adapters.VehiculoAdapter;
 import com.autocare.database.DatabaseHelper;
 import com.autocare.models.Vehiculo;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
 public class VehiculoActivity extends AppCompatActivity {
 
-    Button btnAgregarVehiculo;
+    private Button btnAgregarVehiculo;
+    private ImageButton btnBack;
 
-    TextView txtCantidadVehiculos;
-    TextView txtUltimoMantenimiento;
+    private TextView txtCantidadVehiculos;
+    private TextView txtUltimoMantenimiento;
 
-    RecyclerView recyclerVehiculos;
+    private RecyclerView recyclerVehiculos;
 
-    DatabaseHelper databaseHelper;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
-    ArrayList<Vehiculo> listaVehiculos;
+    private DatabaseHelper databaseHelper;
 
-    VehiculoAdapter adapter;
+    private ArrayList<Vehiculo> listaVehiculos;
+    private VehiculoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehiculo);
+
+        btnBack = findViewById(R.id.btnBack);
+
+        ImageButton btnMenu = findViewById(R.id.btnMenu);
+
+        btnMenu.setOnClickListener(v ->
+                drawerLayout.openDrawer(GravityCompat.START));
 
         btnAgregarVehiculo = findViewById(R.id.btnAgregarVehiculo);
 
@@ -44,12 +61,17 @@ public class VehiculoActivity extends AppCompatActivity {
         txtUltimoMantenimiento = findViewById(R.id.txtUltimoMantenimiento);
 
         recyclerVehiculos = findViewById(R.id.recyclerVehiculos);
-
         recyclerVehiculos.setLayoutManager(new LinearLayoutManager(this));
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
 
         databaseHelper = new DatabaseHelper(this);
 
-        cargarVehiculos();
+        configurarMenuLateral();
+        configurarBotonAtras();
+
+        btnBack.setOnClickListener(v -> finish());
 
         btnAgregarVehiculo.setOnClickListener(v -> {
 
@@ -62,6 +84,7 @@ public class VehiculoActivity extends AppCompatActivity {
 
         });
 
+        cargarVehiculos();
     }
 
     @Override
@@ -78,7 +101,8 @@ public class VehiculoActivity extends AppCompatActivity {
                 "Vehículos registrados: " + listaVehiculos.size()
         );
 
-        String ultimaFecha = databaseHelper.obtenerUltimaFechaMantenimiento();
+        String ultimaFecha =
+                databaseHelper.obtenerUltimaFechaMantenimiento();
 
         txtUltimoMantenimiento.setText(
                 "Último mantenimiento: " + ultimaFecha
@@ -96,10 +120,7 @@ public class VehiculoActivity extends AppCompatActivity {
                                 DetalleVehiculoActivity.class
                         );
 
-                        intent.putExtra(
-                                "idVehiculo",
-                                vehiculo.getId()
-                        );
+                        intent.putExtra("idVehiculo", vehiculo.getId());
 
                         intent.putExtra(
                                 "vehiculo",
@@ -178,6 +199,110 @@ public class VehiculoActivity extends AppCompatActivity {
                 });
 
         recyclerVehiculos.setAdapter(adapter);
+
+    }
+
+    private void configurarMenuLateral() {
+
+        navigationView.setCheckedItem(R.id.nav_vehiculos);
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.nav_dashboard) {
+
+                startActivity(new Intent(this, DashboardActivity.class));
+
+            } else if (id == R.id.nav_vehiculos) {
+
+                drawerLayout.closeDrawer(GravityCompat.START);
+
+            } else if (id == R.id.nav_mantenimientos) {
+
+                Intent intent = new Intent(this, MantenimientoActivity.class);
+                intent.putExtra("modoGeneral", true);
+                startActivity(intent);
+
+            } else if (id == R.id.nav_gastos) {
+
+                Intent intent = new Intent(this, GastosActivity.class);
+                intent.putExtra("historialGeneral", true);
+                startActivity(intent);
+
+            } else if (id == R.id.nav_perfil) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Mi Perfil")
+                        .setMessage("Próximamente.")
+                        .setPositiveButton("Aceptar", null)
+                        .show();
+
+            } else if (id == R.id.nav_acerca) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("AutoCare")
+                        .setMessage(
+                                "Versión 1.0\n\nAplicación para la gestión de mantenimiento vehicular."
+                        )
+                        .setPositiveButton("Aceptar", null)
+                        .show();
+
+            } else if (id == R.id.nav_logout) {
+
+                SharedPreferences preferencias =
+                        getSharedPreferences(
+                                "AutoCarePrefs",
+                                MODE_PRIVATE
+                        );
+
+                preferencias.edit().clear().apply();
+
+                Intent intent = new Intent(
+                        this,
+                        LoginActivity.class
+                );
+
+                intent.setFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK |
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK
+                );
+
+                startActivity(intent);
+                finish();
+
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+
+        });
+
+    }
+
+    private void configurarBotonAtras() {
+
+        getOnBackPressedDispatcher().addCallback(
+                this,
+                new OnBackPressedCallback(true) {
+
+                    @Override
+                    public void handleOnBackPressed() {
+
+                        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+
+                            drawerLayout.closeDrawer(GravityCompat.START);
+
+                        } else {
+
+                            finish();
+
+                        }
+
+                    }
+
+                });
 
     }
 
