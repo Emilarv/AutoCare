@@ -50,7 +50,9 @@ com.autocare
 ├── models
 │   ├── Usuario.java
 │   ├── Vehiculo.java
+│   ├── TipoMantenimiento.java
 │   ├── Mantenimiento.java
+│   ├── HistorialMantenimiento.java
 │   └── Gasto.java
 │
 ├── utils
@@ -60,18 +62,38 @@ com.autocare
 
 ## Funcionalidades principales
 
-- Autenticación: Pantalla de Login para acceso de usuarios.
+- Autenticación de usuarios mediante pantalla de inicio de sesión.
 
-- Panel de Control (Dashboard): Resumen general de flota, gastos y recordatorios mecánicos.
+- Dashboard con indicadores generales:
+    - Vehículos registrados.
+    - Total de mantenimientos realizados.
+    - Total invertido en mantenimiento.
+    - Recordatorios del último mantenimiento de cada vehículo.
 
-- Gestión de Vehículos: Listado interactivo de vehículos registrados y acceso a detalles individuales.
+- Gestión completa de vehículos (CRUD):
+    - Registrar vehículos.
+    - Editar información.
+    - Eliminar vehículos.
+    - Visualizar listado completo.
 
-- Formulario de Registro: Captura de datos técnicos de nuevos automóviles (Marca, Modelo, Año, Placa).
+- Gestión de mantenimientos:
+    - Registrar nuevos mantenimientos.
+    - Seleccionar el tipo de mantenimiento desde la base de datos.
+    - Registrar kilometraje, fecha y descripción.
+    - Historial de mantenimientos por vehículo.
+    - Historial general de todos los mantenimientos.
 
-- Registro de Mantenimientos: Control de servicios preventivos y correctivos.
+- Gestión de gastos:
+    - Registrar gastos asociados a un mantenimiento.
+    - Consultar gastos individuales de cada mantenimiento.
+    - Historial general de gastos de todos los vehículos.
+    - Cálculo automático del total invertido.
 
-- Control de Gastos: Historial económico aplicado al cuidado vehicular.
+- Sistema de recordatorios de mantenimiento mostrado en el Dashboard.
 
+- Persistencia de datos utilizando SQLite mediante DatabaseHelper.
+
+- Navegación entre actividades mediante Intents.
 ## Desarrollador
 
 Emil Rodriguez

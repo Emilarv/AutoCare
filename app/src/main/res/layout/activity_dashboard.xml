@@ -77,13 +77,13 @@
                     android:layout_height="wrap_content"
                     android:text="Vehículos registrados: 0"
                     android:textColor="#424242"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/txtDashMantenimientosPendientes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mantenimientos pendientes: 0"
+                    android:text="Mantenimientos realizados: 0"
                     android:textColor="#424242"
                     android:textSize="15sp"
                     android:layout_marginTop="8dp"/>
@@ -92,12 +92,14 @@
                     android:id="@+id/txtDashGastosMes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gastos este mes: RD$ 0"
+                    android:text="Total invertido: RD$ 0"
                     android:textColor="#E53935"
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:layout_marginTop="8dp"/>
+
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -128,7 +130,7 @@
                 android:textColor="#FFFFFF"
                 app:backgroundTint="#E53935"
                 app:cornerRadius="12dp"
-                app:elevation="2dp" />
+                app:elevation="2dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMantenimientos"
@@ -142,7 +144,7 @@
                 android:textColor="#E53935"
                 app:strokeColor="#E53935"
                 app:strokeWidth="1.5dp"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="12dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGastos"
@@ -156,18 +158,19 @@
                 android:textColor="#E53935"
                 app:strokeColor="#E53935"
                 app:strokeWidth="1.5dp"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="12dp"/>
+
         </GridLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:backgroundTint="#FFF5F5"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            android:backgroundTint="#FFF5F5"
-            app:strokeWidth="1dp"
             app:strokeColor="#FFCDD2"
-            android:layout_marginTop="28dp">
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -186,49 +189,20 @@
                 <View
                     android:layout_width="40dp"
                     android:layout_height="3dp"
-                    android:background="#C62828"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    android:background="#C62828"/>
 
                 <LinearLayout
+                    android:id="@+id/layoutRecordatorios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="• "
-                        android:textColor="#C62828"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Toyota Corolla necesita cambio de aceite"
-                        android:textColor="#D32F2F"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="• "
-                        android:textColor="#C62828"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Honda Civic tiene mantenimiento pendiente"
-                        android:textColor="#D32F2F"
-                        android:textSize="14sp"/>
-                </LinearLayout>
+                    android:orientation="vertical"/>
 
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
+
 </ScrollView>

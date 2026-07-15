@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.autocare.models.Gasto;
 
 import com.autocare.models.Vehiculo;
 
 import java.util.ArrayList;
+import com.autocare.models.Mantenimiento;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -183,6 +185,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ");"
         );
 
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Cambio de aceite','Cambio de aceite del motor',5000,6,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Cambio de filtro','Cambio del filtro de aceite',5000,6,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Cambio de filtro de aire','Cambio del filtro de aire del motor',10000,12,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Alineación','Alineación de las ruedas',10000,12,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Balanceo','Balanceo de neumáticos',10000,12,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Cambio de batería','Sustitución de la batería',40000,24,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Revisión de frenos','Inspección y mantenimiento del sistema de frenos',15000,12,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Cambio de refrigerante','Cambio del líquido refrigerante',40000,24,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Cambio de correa de distribución','Sustitución de la correa de distribución',60000,48,'Activo');");
+
+        db.execSQL("INSERT INTO TipoMantenimiento (nombre_tipo, descripcion, intervalo_km, intervalo_meses, estado) VALUES ('Revisión general','Inspección completa del vehículo',10000,12,'Activo');");
+
         db.execSQL(
                 "CREATE TABLE Mantenimiento (" +
                         "id_mantenimiento INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -220,4 +242,475 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+    public long insertarMantenimiento(Mantenimiento mantenimiento) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("id_vehiculo", mantenimiento.getIdVehiculo());
+        values.put("id_tipo", mantenimiento.getIdTipo());
+        values.put("fecha", mantenimiento.getFecha());
+        values.put("kilometraje", mantenimiento.getKilometraje());
+        values.put("descripcion", mantenimiento.getDescripcion());
+
+        return db.insert(
+                "Mantenimiento",
+                null,
+                values
+        );
+
+    }
+
+    public ArrayList<Mantenimiento> obtenerMantenimientosPorVehiculo(int idVehiculo) {
+
+        ArrayList<Mantenimiento> lista = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM Mantenimiento WHERE id_vehiculo=?",
+                new String[]{String.valueOf(idVehiculo)}
+        );
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                Mantenimiento mantenimiento = new Mantenimiento();
+
+                mantenimiento.setIdMantenimiento(cursor.getInt(0));
+                mantenimiento.setIdVehiculo(cursor.getInt(1));
+                mantenimiento.setIdTipo(cursor.getInt(2));
+                mantenimiento.setFecha(cursor.getString(3));
+                mantenimiento.setKilometraje(cursor.getInt(4));
+                mantenimiento.setDescripcion(cursor.getString(5));
+
+                lista.add(mantenimiento);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return lista;
+
+    }
+
+    public ArrayList<Mantenimiento> obtenerHistorialMantenimiento(int idVehiculo) {
+
+        ArrayList<Mantenimiento> lista = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT " +
+                        "M.id_mantenimiento, " +
+                        "T.nombre_tipo, " +
+                        "M.fecha, " +
+                        "M.kilometraje, " +
+                        "M.descripcion " +
+                        "FROM Mantenimiento M " +
+                        "INNER JOIN TipoMantenimiento T " +
+                        "ON M.id_tipo = T.id_tipo " +
+                        "WHERE M.id_vehiculo = ? " +
+                        "ORDER BY M.id_mantenimiento DESC",
+
+                new String[]{String.valueOf(idVehiculo)}
+
+        );
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                Mantenimiento mantenimiento = new Mantenimiento();
+
+                mantenimiento.setIdMantenimiento(cursor.getInt(0));
+
+                // Nombre del mantenimiento
+                mantenimiento.setNombreTipo(cursor.getString(1));
+
+                mantenimiento.setFecha(cursor.getString(2));
+
+                mantenimiento.setKilometraje(cursor.getInt(3));
+
+                mantenimiento.setDescripcion(cursor.getString(4));
+
+                lista.add(mantenimiento);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return lista;
+    }
+
+    public Cursor obtenerTiposMantenimiento() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT id_tipo, nombre_tipo FROM TipoMantenimiento ORDER BY nombre_tipo",
+                null
+        );
+
+    }
+
+
+    public boolean insertarGasto(Gasto gasto) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("id_mantenimiento", gasto.getIdMantenimiento());
+        values.put("monto", gasto.getMonto());
+        values.put("categoria", gasto.getCategoria());
+
+        long resultado = db.insert(
+                "Gasto",
+                null,
+                values
+        );
+
+        return resultado != -1;
+    }
+
+    public ArrayList<Gasto> obtenerGastosPorMantenimiento(int idMantenimiento) {
+
+        ArrayList<Gasto> lista = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT * FROM Gasto WHERE id_mantenimiento=? ORDER BY id_gasto DESC",
+
+                new String[]{
+                        String.valueOf(idMantenimiento)
+                }
+
+        );
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                Gasto gasto = new Gasto();
+
+                gasto.setIdGasto(cursor.getInt(0));
+                gasto.setIdMantenimiento(cursor.getInt(1));
+                gasto.setMonto(cursor.getDouble(2));
+                gasto.setCategoria(cursor.getString(3));
+
+                lista.add(gasto);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return lista;
+
+    }
+
+    public double obtenerTotalGastos(int idMantenimiento) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT IFNULL(SUM(monto),0) FROM Gasto WHERE id_mantenimiento=?",
+
+                new String[]{
+                        String.valueOf(idMantenimiento)
+                }
+
+        );
+
+        double total = 0;
+
+        if (cursor.moveToFirst()) {
+
+            total = cursor.getDouble(0);
+
+        }
+
+        cursor.close();
+
+        return total;
+
+    }
+
+    public int obtenerCantidadMantenimientos() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT COUNT(*) FROM Mantenimiento",
+                null
+        );
+
+        int cantidad = 0;
+
+        if (cursor.moveToFirst()) {
+            cantidad = cursor.getInt(0);
+        }
+
+        cursor.close();
+
+        return cantidad;
+    }
+
+    public double obtenerTotalGastado() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(SUM(monto),0) FROM Gasto",
+                null
+        );
+
+        double total = 0;
+
+        if (cursor.moveToFirst()) {
+            total = cursor.getDouble(0);
+        }
+
+        cursor.close();
+
+        return total;
+    }
+
+    public int obtenerUltimoKilometrajeVehiculo(int idVehiculo) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT IFNULL(MAX(kilometraje),0) FROM Mantenimiento WHERE id_vehiculo=?",
+
+                new String[]{
+                        String.valueOf(idVehiculo)
+                }
+
+        );
+
+        int ultimoKm = 0;
+
+        if (cursor.moveToFirst()) {
+            ultimoKm = cursor.getInt(0);
+        }
+
+        cursor.close();
+
+        return ultimoKm;
+    }
+    public String obtenerUltimaFechaMantenimiento() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT fecha FROM Mantenimiento " +
+                        "ORDER BY id_mantenimiento DESC LIMIT 1",
+
+                null
+
+        );
+
+        String fecha = "--";
+
+        if (cursor.moveToFirst()) {
+            fecha = cursor.getString(0);
+        }
+
+        cursor.close();
+
+        return fecha;
+    }
+
+    public double obtenerTotalGastadoVehiculo(int idVehiculo) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT IFNULL(SUM(G.monto),0) " +
+                        "FROM Gasto G " +
+                        "INNER JOIN Mantenimiento M " +
+                        "ON G.id_mantenimiento = M.id_mantenimiento " +
+                        "WHERE M.id_vehiculo=?",
+
+                new String[]{
+                        String.valueOf(idVehiculo)
+                }
+
+        );
+
+        double total = 0;
+
+        if (cursor.moveToFirst()) {
+            total = cursor.getDouble(0);
+        }
+
+        cursor.close();
+
+        return total;
+    }
+
+    public Gasto obtenerGastoPorMantenimiento(int idMantenimiento) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT * FROM Gasto WHERE id_mantenimiento=? LIMIT 1",
+
+                new String[]{
+                        String.valueOf(idMantenimiento)
+                }
+
+        );
+
+        Gasto gasto = null;
+
+        if (cursor.moveToFirst()) {
+
+            gasto = new Gasto();
+
+            gasto.setIdGasto(cursor.getInt(0));
+            gasto.setIdMantenimiento(cursor.getInt(1));
+            gasto.setMonto(cursor.getDouble(2));
+            gasto.setCategoria(cursor.getString(3));
+
+        }
+
+        cursor.close();
+
+        return gasto;
+    }
+    public ArrayList<Mantenimiento> obtenerTodosLosMantenimientos() {
+
+        ArrayList<Mantenimiento> lista = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT " +
+                        "M.id_mantenimiento, " +
+                        "V.marca || ' ' || V.modelo, " +
+                        "T.nombre_tipo, " +
+                        "M.fecha, " +
+                        "M.kilometraje, " +
+                        "M.descripcion " +
+                        "FROM Mantenimiento M " +
+                        "INNER JOIN Vehiculo V ON M.id_vehiculo = V.id_vehiculo " +
+                        "INNER JOIN TipoMantenimiento T ON M.id_tipo = T.id_tipo " +
+                        "ORDER BY M.id_mantenimiento DESC",
+
+                null
+
+        );
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                Mantenimiento mantenimiento = new Mantenimiento();
+
+                mantenimiento.setIdMantenimiento(cursor.getInt(0));
+
+                // Aquí guardaremos el nombre del vehículo
+                mantenimiento.setDescripcion(
+                        cursor.getString(1)
+                );
+
+                mantenimiento.setNombreTipo(
+                        cursor.getString(2)
+                );
+
+                mantenimiento.setFecha(
+                        cursor.getString(3)
+                );
+
+                mantenimiento.setKilometraje(
+                        cursor.getInt(4)
+                );
+
+                lista.add(mantenimiento);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return lista;
+
+    }
+    public ArrayList<Gasto> obtenerTodosLosGastos() {
+
+        ArrayList<Gasto> lista = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT * FROM Gasto ORDER BY id_gasto DESC",
+
+                null
+
+        );
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                Gasto gasto = new Gasto();
+
+                gasto.setIdGasto(cursor.getInt(0));
+                gasto.setIdMantenimiento(cursor.getInt(1));
+                gasto.setMonto(cursor.getDouble(2));
+                gasto.setCategoria(cursor.getString(3));
+
+                lista.add(gasto);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return lista;
+    }
+    public int obtenerCantidadVehiculos() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT COUNT(*) FROM Vehiculo",
+                null
+        );
+
+        int cantidad = 0;
+
+        if (cursor.moveToFirst()) {
+            cantidad = cursor.getInt(0);
+        }
+
+        cursor.close();
+
+        return cantidad;
+    }
 }
+

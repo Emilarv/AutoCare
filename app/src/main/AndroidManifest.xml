@@ -19,6 +19,7 @@
         <activity android:name=".activities.DetalleVehiculoActivity" />
         <activity android:name=".activities.RegistrarMantenimientoActivity" />
         <activity android:name=".activities.EditarVehiculoActivity"/>
+        <activity android:name=".activities.GastosActivity"/>
 
         <activity
             android:name=".activities.LoginActivity"

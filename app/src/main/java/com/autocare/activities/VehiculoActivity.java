@@ -21,10 +21,16 @@ import java.util.ArrayList;
 public class VehiculoActivity extends AppCompatActivity {
 
     Button btnAgregarVehiculo;
+
     TextView txtCantidadVehiculos;
+    TextView txtUltimoMantenimiento;
+
     RecyclerView recyclerVehiculos;
+
     DatabaseHelper databaseHelper;
+
     ArrayList<Vehiculo> listaVehiculos;
+
     VehiculoAdapter adapter;
 
     @Override
@@ -33,7 +39,10 @@ public class VehiculoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vehiculo);
 
         btnAgregarVehiculo = findViewById(R.id.btnAgregarVehiculo);
+
         txtCantidadVehiculos = findViewById(R.id.txtCantidadVehiculos);
+        txtUltimoMantenimiento = findViewById(R.id.txtUltimoMantenimiento);
+
         recyclerVehiculos = findViewById(R.id.recyclerVehiculos);
 
         recyclerVehiculos.setLayoutManager(new LinearLayoutManager(this));
@@ -43,9 +52,16 @@ public class VehiculoActivity extends AppCompatActivity {
         cargarVehiculos();
 
         btnAgregarVehiculo.setOnClickListener(v -> {
-            Intent intent = new Intent(VehiculoActivity.this, RegisterActivity.class);
+
+            Intent intent = new Intent(
+                    VehiculoActivity.this,
+                    RegisterActivity.class
+            );
+
             startActivity(intent);
+
         });
+
     }
 
     @Override
@@ -55,40 +71,114 @@ public class VehiculoActivity extends AppCompatActivity {
     }
 
     private void cargarVehiculos() {
+
         listaVehiculos = databaseHelper.obtenerVehiculos();
 
-        txtCantidadVehiculos.setText("Vehículos registrados: " + listaVehiculos.size());
+        txtCantidadVehiculos.setText(
+                "Vehículos registrados: " + listaVehiculos.size()
+        );
 
-        // Se inicializa el adaptador pasando la lista y la interfaz implementada correctamente
-        adapter = new VehiculoAdapter(listaVehiculos, new VehiculoAdapter.OnVehiculoClickListener() {
-            @Override
-            public void onEditarClick(Vehiculo vehiculo) {
-                Intent intent = new Intent(VehiculoActivity.this, EditarVehiculoActivity.class);
-                intent.putExtra("id", vehiculo.getId());
-                intent.putExtra("marca", vehiculo.getMarca());
-                intent.putExtra("modelo", vehiculo.getModelo());
-                intent.putExtra("anio", vehiculo.getAnio());
-                intent.putExtra("placa", vehiculo.getPlaca());
-                startActivity(intent);
-            }
+        String ultimaFecha = databaseHelper.obtenerUltimaFechaMantenimiento();
 
-            @Override
-            public void onEliminarClick(Vehiculo vehiculo) {
-                new AlertDialog.Builder(VehiculoActivity.this)
-                        .setTitle("Eliminar vehículo")
-                        .setMessage("¿Deseas eliminar " + vehiculo.getMarca() + " " + vehiculo.getModelo() + "?")
-                        .setPositiveButton("Sí", (dialog, which) -> {
-                            boolean eliminado = databaseHelper.eliminarVehiculo(vehiculo.getId());
-                            if (eliminado) {
-                                Toast.makeText(VehiculoActivity.this, "Vehículo eliminado", Toast.LENGTH_SHORT).show();
-                                cargarVehiculos(); // Recarga la lista de inmediato
-                            }
-                        })
-                        .setNegativeButton("Cancelar", null)
-                        .show();
-            }
-        });
+        txtUltimoMantenimiento.setText(
+                "Último mantenimiento: " + ultimaFecha
+        );
+
+        adapter = new VehiculoAdapter(
+                listaVehiculos,
+                new VehiculoAdapter.OnVehiculoClickListener() {
+
+                    @Override
+                    public void onVehiculoClick(Vehiculo vehiculo) {
+
+                        Intent intent = new Intent(
+                                VehiculoActivity.this,
+                                DetalleVehiculoActivity.class
+                        );
+
+                        intent.putExtra(
+                                "idVehiculo",
+                                vehiculo.getId()
+                        );
+
+                        intent.putExtra(
+                                "vehiculo",
+                                vehiculo.getMarca() + " " + vehiculo.getModelo()
+                        );
+
+                        intent.putExtra(
+                                "placa",
+                                vehiculo.getPlaca()
+                        );
+
+                        intent.putExtra(
+                                "anio",
+                                vehiculo.getAnio()
+                        );
+
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onEditarClick(Vehiculo vehiculo) {
+
+                        Intent intent = new Intent(
+                                VehiculoActivity.this,
+                                EditarVehiculoActivity.class
+                        );
+
+                        intent.putExtra("id", vehiculo.getId());
+                        intent.putExtra("marca", vehiculo.getMarca());
+                        intent.putExtra("modelo", vehiculo.getModelo());
+                        intent.putExtra("anio", vehiculo.getAnio());
+                        intent.putExtra("placa", vehiculo.getPlaca());
+
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onEliminarClick(Vehiculo vehiculo) {
+
+                        new AlertDialog.Builder(VehiculoActivity.this)
+                                .setTitle("Eliminar vehículo")
+                                .setMessage(
+                                        "¿Deseas eliminar "
+                                                + vehiculo.getMarca()
+                                                + " "
+                                                + vehiculo.getModelo()
+                                                + "?"
+                                )
+                                .setPositiveButton("Sí", (dialog, which) -> {
+
+                                    boolean eliminado =
+                                            databaseHelper.eliminarVehiculo(
+                                                    vehiculo.getId()
+                                            );
+
+                                    if (eliminado) {
+
+                                        Toast.makeText(
+                                                VehiculoActivity.this,
+                                                "Vehículo eliminado",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+
+                                        cargarVehiculos();
+
+                                    }
+
+                                })
+                                .setNegativeButton("Cancelar", null)
+                                .show();
+
+                    }
+
+                });
 
         recyclerVehiculos.setAdapter(adapter);
+
     }
+
 }

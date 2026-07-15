@@ -35,13 +35,13 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            android:backgroundTint="#FFFFFF"
-            app:strokeWidth="1dp"
             app:strokeColor="#E0E0E0"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp">
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,87 +54,100 @@
                     android:layout_height="wrap_content"
                     android:text="Información General"
                     android:textColor="#212121"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="40dp"
                     android:layout_height="3dp"
-                    android:background="#E53935"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    android:background="#E53935" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Número de Placa"
                         android:textColor="#757575"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
+
                     <TextView
+                        android:id="@+id/txtPlaca"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="A123456"
+                        android:text="-"
                         android:textColor="#212121"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Kilometraje Actual"
                         android:textColor="#757575"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
+
                     <TextView
+                        android:id="@+id/txtKilometraje"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="85,000 km"
+                        android:text="-"
                         android:textColor="#212121"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Estado del Vehículo"
+                        android:text="Total invertido"
                         android:textColor="#757575"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
+
                     <TextView
+                        android:id="@+id/txtEstado"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="Activo"
+                        android:text="-"
                         android:textColor="#2E7D32"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
                 </RelativeLayout>
 
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:backgroundTint="#F9FAFB"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            android:backgroundTint="#F9FAFB"
-            app:strokeWidth="1dp"
             app:strokeColor="#E4E7EB"
-            android:layout_marginBottom="28dp">
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,30 +158,26 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Historial Reciente"
+                    android:text="Último Mantenimiento"
                     android:textColor="#212121"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="40dp"
                     android:layout_height="3dp"
-                    android:background="#BDBDBD"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="20dp"
+                    android:background="#BDBDBD" />
 
-                <!-- Corregido el paddingVertical aquí -->
-                <TextView
+                <LinearLayout
+                    android:id="@+id/layoutHistorial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No se encontraron mantenimientos registrados para este vehículo."
-                    android:textColor="#757575"
-                    android:textSize="14sp"
-                    android:gravity="center"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"/>
+                    android:orientation="vertical"/>
 
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
@@ -177,9 +186,9 @@
             android:layout_height="56dp"
             android:layout_marginBottom="12dp"
             android:text="Agregar Mantenimiento"
+            android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
             app:backgroundTint="#E53935"
             app:cornerRadius="12dp"
             app:elevation="2dp" />
@@ -190,11 +199,12 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:text="Ver Historial Completo"
-            android:textSize="15sp"
             android:textColor="#E53935"
+            android:textSize="15sp"
+            app:cornerRadius="12dp"
             app:strokeColor="#E53935"
-            app:strokeWidth="1.5dp"
-            app:cornerRadius="12dp" />
+            app:strokeWidth="1.5dp" />
 
     </LinearLayout>
+
 </ScrollView>

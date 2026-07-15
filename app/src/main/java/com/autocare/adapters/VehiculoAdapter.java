@@ -22,6 +22,8 @@ public class VehiculoAdapter extends RecyclerView.Adapter<VehiculoAdapter.ViewHo
 
     public interface OnVehiculoClickListener {
 
+        void onVehiculoClick(Vehiculo vehiculo);
+
         void onEditarClick(Vehiculo vehiculo);
 
         void onEliminarClick(Vehiculo vehiculo);
@@ -58,6 +60,10 @@ public class VehiculoAdapter extends RecyclerView.Adapter<VehiculoAdapter.ViewHo
             int position) {
 
         Vehiculo vehiculo = listaVehiculos.get(position);
+
+        holder.itemView.setOnClickListener(v ->
+                listener.onVehiculoClick(vehiculo)
+        );
 
         holder.txtNombreVehiculo.setText(
                 vehiculo.getMarca() + " " +

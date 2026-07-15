@@ -4,73 +4,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F7FA"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:descendantFocusability="beforeDescendants">
 
         <TextView
+            android:id="@+id/txtVehiculo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vehículo: Toyota Corolla 2020"
+            android:text="Vehículo"
+            android:textStyle="bold"
+            android:textSize="14sp"
             android:textColor="#757575"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:letterSpacing="0.05" />
+            android:textAllCaps="true"/>
 
         <TextView
+            android:id="@+id/txtPlaca"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Registrar Mantenimiento"
-            android:textColor="#212121"
-            android:textSize="26sp"
+            android:text="Placa"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginTop="4dp"
+            android:textColor="#212121"
             android:layout_marginBottom="24dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="18dp"
             android:hint="Tipo de mantenimiento"
             app:boxStrokeColor="#E53935"
             app:hintTextColor="#E53935">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtTipo"
+            <AutoCompleteTextView
+                android:id="@+id/spTipo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:textColor="#212121" />
+                android:inputType="none"
+                android:textColor="#212121"
+                android:padding="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="18dp"
             android:hint="Fecha"
             app:boxStrokeColor="#E53935"
-            app:hintTextColor="#E53935">
+            app:hintTextColor="#E53935"
+            app:placeholderText="Seleccione una fecha">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtFecha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:textColor="#212121" />
+                android:focusable="false"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:inputType="none"
+                android:textColor="#212121"
+                android:drawableEnd="@android:drawable/ic_menu_my_calendar"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="18dp"
             android:hint="Kilometraje"
             app:boxStrokeColor="#E53935"
             app:hintTextColor="#E53935"
@@ -81,27 +89,8 @@
                 android:id="@+id/txtKilometraje"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:textColor="#212121" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Costo"
-            app:boxStrokeColor="#E53935"
-            app:hintTextColor="#E53935"
-            app:prefixText="RD$ "
-            app:prefixTextColor="#212121">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtCosto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:inputType="number"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -109,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="28dp"
-            android:hint="Descripción o notas"
+            android:hint="Descripción"
             app:boxStrokeColor="#E53935"
             app:hintTextColor="#E53935">
 
@@ -117,23 +106,42 @@
                 android:id="@+id/txtDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
+                android:minLines="4"
+                android:textColor="#212121"
                 android:gravity="top|start"
-                android:minLines="3"
-                android:textColor="#212121" />
+                android:inputType="textMultiLine"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:hint="Costo (RD$)"
+            app:boxStrokeColor="#E53935"
+            app:hintTextColor="#E53935"
+            app:prefixText="RD$ "
+            app:prefixTextColor="#757575">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtCosto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"/>
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardarMantenimiento"
+            android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Guardar Mantenimiento"
+            android:text="Guardar mantenimiento"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             app:backgroundTint="#E53935"
             app:cornerRadius="12dp"
-            app:elevation="2dp" />
+            app:elevation="2dp"/>
 
     </LinearLayout>
 </ScrollView>
