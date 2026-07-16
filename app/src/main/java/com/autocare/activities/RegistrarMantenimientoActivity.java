@@ -45,7 +45,6 @@ public class RegistrarMantenimientoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_mantenimiento);
 
-        // Vincular componentes visuales
         txtVehiculo = findViewById(R.id.txtVehiculo);
         txtPlaca = findViewById(R.id.txtPlaca);
         spTipo = findViewById(R.id.spTipo);
@@ -57,7 +56,6 @@ public class RegistrarMantenimientoActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
 
-        // Recuperar parámetros del Intent
         idVehiculo = getIntent().getIntExtra("idVehiculo", -1);
         String vehiculo = getIntent().getStringExtra("vehiculo");
         String placa = getIntent().getStringExtra("placa");
@@ -65,15 +63,11 @@ public class RegistrarMantenimientoActivity extends AppCompatActivity {
         txtVehiculo.setText(vehiculo);
         txtPlaca.setText("Placa: " + placa);
 
-        // Configurar comportamiento inicial de los campos (Evita que abran el teclado)
         spTipo.setInputType(InputType.TYPE_NULL);
         txtFecha.setInputType(InputType.TYPE_NULL);
 
-        // Cargar tipos desde la base de datos local
         cargarTiposMantenimiento();
 
-        // --- MANEJO DE EVENTOS LIMPIO PARA EL SPINNER (TIPO) ---
-        // Al usar un Exposed Dropdown Menu, basta con controlar el click y el foco
         spTipo.setOnClickListener(v -> spTipo.showDropDown());
         spTipo.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -81,7 +75,6 @@ public class RegistrarMantenimientoActivity extends AppCompatActivity {
             }
         });
 
-        // --- MANEJO DE EVENTOS LIMPIO PARA LA FECHA ---
         txtFecha.setOnClickListener(v -> mostrarCalendario());
         txtFecha.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -89,7 +82,6 @@ public class RegistrarMantenimientoActivity extends AppCompatActivity {
             }
         });
 
-        // --- MANEJO DE EVENTOS PARA EL BOTÓN GUARDAR ---
         btnGuardar.setOnClickListener(v -> guardarMantenimiento());
     }
 
@@ -111,13 +103,11 @@ public class RegistrarMantenimientoActivity extends AppCompatActivity {
             cursor.close();
         }
 
-        // Extraemos únicamente los nombres de los tipos de mantenimiento
         ArrayList<String> nombresTipos = new ArrayList<>();
         for (TipoMantenimiento tipo : listaTipos) {
             nombresTipos.add(tipo.getNombre());
         }
 
-        // Usamos el layout simple_spinner_dropdown_item enfocado en Strings puros
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,

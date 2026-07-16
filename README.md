@@ -27,7 +27,6 @@ Patrón MVC (Modelo - Vista - Controlador)
 ## Estructura del proyecto
 
 ```text
-```text
 com.autocare
 │
 ├── activities
@@ -36,6 +35,7 @@ com.autocare
 │   ├── EditarVehiculoActivity.java
 │   ├── GastosActivity.java
 │   ├── LoginActivity.java
+│   ├── RegistroUsuarioActivity.java
 │   ├── MantenimientoActivity.java
 │   ├── RegisterActivity.java
 │   ├── RegistrarMantenimientoActivity.java
@@ -62,38 +62,43 @@ com.autocare
 
 ## Funcionalidades principales
 
-- Autenticación de usuarios mediante pantalla de inicio de sesión.
+- Registro de usuarios.
+- Inicio de sesión con validación de credenciales.
+- Sesión persistente mediante SharedPreferences.
+- Menú lateral (Navigation Drawer) para navegar entre los módulos principales.
 
 - Dashboard con indicadores generales:
     - Vehículos registrados.
     - Total de mantenimientos realizados.
-    - Total invertido en mantenimiento.
-    - Recordatorios del último mantenimiento de cada vehículo.
+    - Total invertido.
+    - Recordatorios del último mantenimiento.
 
 - Gestión completa de vehículos (CRUD):
     - Registrar vehículos.
     - Editar información.
     - Eliminar vehículos.
     - Visualizar listado completo.
+    - Consultar detalle del vehículo.
 
 - Gestión de mantenimientos:
     - Registrar nuevos mantenimientos.
-    - Seleccionar el tipo de mantenimiento desde la base de datos.
-    - Registrar kilometraje, fecha y descripción.
-    - Historial de mantenimientos por vehículo.
-    - Historial general de todos los mantenimientos.
+    - Seleccionar el tipo de mantenimiento.
+    - Registrar fecha, kilometraje, descripción y costo.
+    - Historial por vehículo.
+    - Historial general.
 
 - Gestión de gastos:
-    - Registrar gastos asociados a un mantenimiento.
-    - Consultar gastos individuales de cada mantenimiento.
-    - Historial general de gastos de todos los vehículos.
-    - Cálculo automático del total invertido.
+    - Registro automático de gastos asociados al mantenimiento.
+    - Historial general de gastos.
+    - Total invertido por vehículo.
+    - Total invertido general.
 
-- Sistema de recordatorios de mantenimiento mostrado en el Dashboard.
-
-- Persistencia de datos utilizando SQLite mediante DatabaseHelper.
+- Persistencia de datos utilizando SQLite.
 
 - Navegación entre actividades mediante Intents.
+
+- Arquitectura organizada bajo el patrón MVC.
+
 ## Desarrollador
 
 Emil Rodriguez
@@ -104,4 +109,4 @@ Seminario de Proyecto II (ISW-411)
 
 ## Estado del proyecto
 
-Prototipo funcional implementado (Fase de desarrollo de interfaces, navegación y lógica base de actividades).
+Versión 1.0 finalizada con las funcionalidades principales implementadas para fines académicos.

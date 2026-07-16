@@ -47,7 +47,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultado != -1;
     }
 
-    // OBTENER TODOS LOS VEHICULOS
     public ArrayList<Vehiculo> obtenerVehiculos() {
 
         ArrayList<Vehiculo> lista = new ArrayList<>();

@@ -8,7 +8,6 @@ public class Gasto {
     private double monto;
     private String categoria;
 
-    // NUEVOS CAMPOS
     private String vehiculo;
     private String mantenimiento;
 
@@ -57,10 +56,6 @@ public class Gasto {
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
-
-    // ----------------------------
-    // NUEVOS GETTERS Y SETTERS
-    // ----------------------------
 
     public String getVehiculo() {
         return vehiculo;
